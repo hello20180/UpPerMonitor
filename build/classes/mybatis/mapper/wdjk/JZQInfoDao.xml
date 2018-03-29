@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnzy.per.wdjk.dao.JZQInfoDao">
+	<resultMap type="JZQInfo" id="jzqInfo">
+		<id property="id" column="id" />
+		<result property="jzqId" column="JzqId" />
+		<result property="jzqIp" column="JzqIP" />
+		<result property="portNum" column="PortNum" />
+		<result property="jzqAd" column="JzqAd" />
+	</resultMap>
+	<select id="findJzqId" parameterType="JZQInfo" resultMap="jzqInfo">
+	select JzqId from jzqInfo
+	</select>
+	<!-- 	添加 --> 
+	<insert id="Insert" parameterType="JZQInfo">
+	 insert into jzqInfo(JzqId,JzqIP,PortNum,JzqAd)
+	 values(#{jzqId},#{jzqIp},#{portNum},#{jzqAd})
+	</insert>
+	<!-- 	根据ID查询 -->
+	<select id="findById" parameterType="JZQInfo" resultMap="jzqInfo">
+		select * from jzqInfo where id=#{id}
+	</select>
+	<!-- 	修改 -->
+	<update id="update" parameterType="JZQInfo">
+		update jzqInfo set JzqIP=#{jzqIp} ,PortNum=#{portNum},JzqAd=#{jzqAd}
+		 where id=#{id}
+	</update>
+<!-- 	删除 -->
+	<delete id="delete" parameterType="JZQInfo">
+		delete from jzqInfo where id=#{id}
+	</delete>
+	<!-- 查询所有数据并分页 -->
+	<select id="findAll" resultMap="jzqInfo">
+		select * from jzqInfo LIMIT
+		#{offset},#{limit}
+	</select>
+	<!-- 数据总数 -->
+	<select id="getTotalNum" resultType="int">
+		SELECT count(id)
+		from jzqInfo
+	</select>
+		<!-- 按条件查询 -->
+	<select id="findCondition" resultMap="jzqInfo" parameterType="JZQInfo">
+		select *
+		from jzqInfo
+		<where>
+			<if test="jzqAd!='--选择小区名称--'">
+			JzqAd like #{jzqAd}
+			</if>
+		</where>
+		LIMIT #{offset},#{limit}
+	</select>
+	<!-- 按条件查询总数 -->
+	<select id="getTotal" resultType="int">
+		SELECT count(id) from jzqInfo
+		<where>
+			<if test="jzqAd!='--选择小区名称--'">
+			JzqAd like #{jzqAd}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

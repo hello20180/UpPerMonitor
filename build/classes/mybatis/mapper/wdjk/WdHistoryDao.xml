@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnzy.per.wdjk.dao.WdHistoryDao">
+	<resultMap type="WdHistory" id="wdHistorw">
+		<id property="id" column="id" />
+		<result property="cgqId" column="CgqId" />
+		<result property="cgq.xqName" column="XqName" />
+		<result property="cgq.buildNO" column="BuildNO" />
+		<result property="cgq.cellNO" column="CellNO" />
+		<result property="cgq.houseNO" column="houseNO" />
+		<result property="cgq.name" column="UserName" />
+		<result property="cgq.tel" column="Tel" />
+		<result property="cgq.beiZhu" column="BeiZhu" />
+		<result property="wd" column="WD" />
+		<result property="sd" column="SD" />
+		<result property="dl" column="DL" />
+		<result property="time" column="RecordTime" />
+	</resultMap>
+
+	<!-- ========================================温度历史开始==================================================== -->
+	<!-- 列表显示 -->
+	<select id="findLS" resultMap="wdHistorw">
+		select h.id,h.CgqId,h.WD,h.DL,h.SD,h.RecordTime,cgq.Ad433,cgq.XqName,cgq.BuildNO,cgq.CellNO,cgq.houseNO,cgq.UserName,cgq.Tel
+		from historycgq h,cgqinfo cgq
+		where h.CgqId=cgq.CgqId
+		LIMIT #{offset},#{limit}
+	</select>
+	<!-- 数据总数 -->
+	<select id="LSTotalNum" resultType="int">
+		SELECT count(id)
+		from
+		historycgq
+	</select>
+
+	<!-- 按条件查询 -->
+	<select id="findLSCondition" resultMap="wdHistorw" parameterType="WdHistory">
+		select h.id,h.CgqId,h.WD,h.DL,h.SD,h.RecordTime,cgq.Ad433,cgq.XqName,cgq.BuildNO,cgq.CellNO,cgq.houseNO,cgq.UserName,cgq.Tel
+		from historycgq h,cgqinfo cgq
+		where h.CgqId=cgq.CgqId
+			<if test="xqName!='--选择小区名称--'">
+				and cgq.XqName=#{xqName}
+			</if>
+		LIMIT #{offset},#{limit}
+	</select>
+	<!-- 按条件查询总数 -->
+	<select id="LSTotal" resultType="int">
+		SELECT count(h.id) from historycgq h,cgqinfo cgq
+		where h.CgqId=cgq.CgqId
+			<if test="xqName!='--选择小区名称--'">
+				and cgq.XqName=#{xqName}
+			</if>
+	</select>
+	<!-- 按条件查询导出 -->
+	<select id="findByNameLS" resultMap="wdHistorw" parameterType="WdHistory">
+		select h.id,h.CgqId,h.WD,h.DL,h.SD,h.RecordTime,cgq.Ad433,cgq.XqName,cgq.BuildNO,cgq.CellNO,cgq.houseNO,cgq.UserName,cgq.Tel
+		from historycgq h,cgqinfo cgq
+		where h.CgqId=cgq.CgqId
+			<if test="xqName!='--选择小区名称--'">
+				and cgq.XqName=#{xqName}
+			</if>
+	</select>
+
+	<!-- ========================================温度历史结束==================================================== -->
+	
+	<!-- =========================================曲线图开始======================================================= -->
+	<!-- 图表搜索条件 -->
+	<select id="findChar" parameterType="WdHistory" resultMap="wdHistorw">
+		select *
+		from historycgq h,cgqinfo cgq
+		<where>
+			<if test="cgqId!='--选择传感器--'">
+				and h.CgqId=#{cgqId}
+			</if>
+		</where>
+	</select>
+
+	<select id="findHistoryLine" parameterType="WdHistory" resultMap="wdHistorw">
+
+		select h.CgqId,h.WD,h.DL,h.SD,h.RecordTime
+		from historycgq h
+		where h.CgqId=#{cgqId} and h.RecordTime >= #{time}
+		order by RecordTime
+	</select>
+<!-- ==========================================曲线图结束============================================================ -->
+</mapper>

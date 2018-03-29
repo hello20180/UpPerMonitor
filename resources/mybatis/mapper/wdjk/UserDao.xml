@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnzy.per.wdjk.dao.UserDao">
+	<resultMap type="User" id="user">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="trueName" column="TrueName" />
+		<result property="pass" column="pass" />
+		<result property="state" column="state" />
+		<result property="role" column="role" />
+		<result property="createdTime" column="CreatedTime" />
+	</resultMap>
+<!-- 	添加 -->
+	<insert id="Insert" parameterType="User">
+		insert into user
+		(name,TrueName,pass,role,state,CreatedTime) values (#{name},#{trueName},#{pass},#{role},#{state},#{createdTime})
+	</insert>
+<!-- 	删除 -->
+	<delete id="delete">
+		delete from user where id=#{id}
+	</delete>
+<!-- 	修改状态 -->
+	<update id="updateState" parameterType="User">
+		update user set state=#{state}
+		 where	id=#{id}
+	</update>
+	
+<!-- 列表显示 -->
+	<select id="findAll" resultMap="user">
+		select *
+		from user
+		LIMIT #{offset},#{limit}
+	</select>
+<!-- 	数据总数 -->
+	 	<select id="getTotalNum" resultType="int">
+		SELECT count(id)
+		from user
+ 	</select>
+ 			<!-- 按条件查询 -->
+	<select id="findCondition" resultMap="user" parameterType="User">
+		select *
+		from user
+		<where>
+			<if test="name!='' and name!=null" >
+				and name like #{name}
+			</if>
+			
+		</where>
+		LIMIT #{offset},#{limit}
+	</select>
+	<!-- 按条件查询总数 -->
+	<select id="getTotal" resultType="int">
+		SELECT count(id) from user
+		<where>
+			<if test="name!='' and name!=null" >
+				and name like #{name}
+			</if>
+			
+		</where>
+	</select>
+	<!--  	验证账号唯一性 -->
+ 	<select id="findUserByNameAndMD5" parameterType="User" resultType="User">
+		select * from user where name=#{name} and pass=#{pass}
+	</select>
+<!-- 	根据ID查询 -->
+	<select id="findById" parameterType="User" resultMap="user">
+		select id,name,pass,TrueName,role from user where id=#{id}
+	</select>
+<!-- 	修改用户 -->
+	<update id="update" parameterType="User">
+		update user set
+		name=#{name},pass=#{pass},TrueName=#{trueName},role=#{role},CreatedTime=#{createdTime} where id=#{id}
+	</update>
+</mapper>

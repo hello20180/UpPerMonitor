@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnzy.per.wdjk.dao.RzDao">
+   <resultMap type="Rz" id="rz">
+		<id property="id" column="Id" />
+		<result property="czr" column="Czr" />
+		<result property="cz" column="Cz" />
+		<result property="czsj" column="Czsj" />
+	</resultMap>
+		<!-- 	添加 --> 
+	<insert id="Insert" parameterType="Rz">
+	 insert into Rz(Czr,Cz,Czsj)
+	 values(#{czr},#{cz},#{czsj})
+	</insert>
+	<select id="findAll" resultMap="rz" >
+	    select *
+		from Rz
+		LIMIT #{offset},#{limit}
+	</select>
+	<!-- 按条件查询 -->
+	<select id="findCzr" resultMap="rz" parameterType="Rz">
+		select *
+		from Rz
+		<where>
+			<if test="czr!='' and czr!=null" >
+				and Czr like #{czr}
+			</if>
+			
+		</where>
+		LIMIT #{offset},#{limit}
+	</select>
+	<!-- 按条件查询总数 -->
+	<select id="CzCount" resultType="int" parameterType="Rz">
+		SELECT count(Id) from Rz
+		<where>
+			<if test="czr!='' and czr!=null" >
+				and Czr like #{czr}
+			</if>
+			
+		</where>
+	</select><!-- 数据总数 -->
+	<select id="getTotalNum" resultType="int">
+		SELECT count(Id)
+		from Rz
+	</select>
+</mapper>

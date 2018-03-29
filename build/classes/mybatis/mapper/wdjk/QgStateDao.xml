@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnzy.per.wdjk.dao.QgStateDao">
+<resultMap type="QgState" id="qgState">
+<id property="id" column="id"/>
+<result property="qgId" column="QgId"/>
+<result property="jzqInfo.jzqIp" column="JzqIP"/>
+<result property="qg.xqName" column="XqName"/>
+<result property="qg.buildNO" column="BuildNO"/>
+<result property="qg.qgAd" column="QgAd"/>
+<result property="jzqInfo.portNum" column="PortNum"/>
+<result property="swwd" column="SWWD"/>
+<result property="qg.ms" column="MS"/>
+<result property="qg.wxAd" column="Ad433"/>
+<result property="recordTime" column="RecordTime"/>
+</resultMap>
+	<!-- 	修改 -->
+	<update id="update" parameterType="QgState">
+		update qginfo qg,xtb x set qg.Ad433=#{wxAd}
+		 where qg.QgId=x.QgId and x.id=#{id}
+	</update>
+
+<!-- 根据ID查询 -->
+	<select id="findById"  parameterType="QgState"  resultMap="qgState">
+		select x.id, x.QgId,x.QgIp,x.portNum,q.MS,q.Ad433
+			from xtb x,qginfo q
+		where x.QgId=q.QgId
+		<if test="id!='' and id!=null and id!=0">
+		    and x.id=#{id}
+		</if>
+		
+	</select>
+	
+	<!-- 根据ID查询 -->
+	<select id="findQGId" resultType="QgState" parameterType="QgState">
+		select x.QgId,x.QgIp,x.portNum
+			from xtb x
+		where x.QgId=#{qgId}
+
+	</select>
+<!-- 查询所有数据并分页 -->
+	<select id="findAll" resultMap="qgState">
+		select q.id,q.QgId,j.JzqId,j.JzqIP,j.PortNum,x.SWWD,x.RecordTime,q.MS,q.XqName,q.BuildNO,q.QgAd,q.Ad433
+		from xtb x,qginfo q,jzqInfo j
+		where x.QgId=q.QgId and j.JzqId=x.JzqId
+		LIMIT #{offset},#{limit}
+	</select>
+	<!-- 数据总数 -->
+	<select id="getTotalNum" resultType="int">
+		SELECT count(id)
+		from xtb
+	</select>
+	
+	<!-- 按条件查询 -->
+	<select id="findCondition" resultMap="qgState" parameterType="QgState">
+		select xt.id,xt.portNum,xt.QgId,xt.QgIp,qg.XqName,xt.SWWD,qg.MS,xt.RecordTime,qg.BuildNO,qg.QgAd 
+		from xtb xt,qginfo qg 
+		where xt.QgId=qg.QgId 
+		<if test="xqName!='--选择小区名称--'">
+			and qg.XqName=#{xqName}
+		</if>
+		<if test="qgId!='--选择区管ID--'">
+		    and xt.QgId=#{qgId}
+		</if>
+			
+		LIMIT #{offset},#{limit}
+	</select>
+	<!-- 按条件查询总数 -->
+	<select id="getTotal" resultType="int">
+		SELECT count(xt.id)
+		from xtb xt,qginfo qg 
+		where xt.QgId=qg.QgId 
+		<if test="xqName!='--选择小区名称--'">
+			and qg.XqName=#{xqName}
+		</if>
+		<if test="qgId!='--选择区管ID--'">
+		    and xt.QgId=#{qgId}
+		</if>
+		
+	</select>
+</mapper>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnzy.per.wdjk.dao.CGQInfoDao">
+	<resultMap type="CGQInfo" id="cgqInfo">
+		<id property="id" column="id" />
+		<result property="cgqId" column="CgqId" />
+		<result property="ad433" column="Ad433" />
+		<result property="xqName" column="XqName" />
+		<result property="buildNO" column="BuildNO" />
+		<result property="cellNO" column="CellNO" />
+		<result property="houseNO" column="houseNO" />
+		<result property="name" column="UserName" />
+		<result property="tel" column="Tel" />
+		<result property="beiZhu" column="BeiZhu" />
+		<result property="wd" column="WD" />
+		<result property="sd" column="SD" />
+		<result property="dl" column="DL" />
+		<result property="recordTime" column="RecordTime" />
+	</resultMap>
+	<!-- ===============================传感器开始======================================================== -->
+	<!-- 添加 -->
+	<insert id="Insert" parameterType="CGQInfo">
+		insert into
+		cgqinfo(CgqId,Ad433,XqName,BuildNO,CellNO,houseNO,UserName,Tel,BeiZhu)
+		values(#{cgqId},#{ad433},#{xqName},#{buildNO},#{cellNO},#{houseNO},#{name},#{tel},#{beiZhu})
+	</insert>
+	<!-- 根据ID查询 -->
+	<select id="findById" parameterType="CGQInfo" resultMap="cgqInfo">
+		select *
+		from cgqinfo where id=#{id}
+	</select>
+	<!-- 修改 -->
+	<update id="update" parameterType="CGQInfo">
+		update cgqinfo set
+		BuildNO=#{buildNO},CellNO=#{cellNO}
+		,houseNO=#{houseNO},UserName=#{name} ,Tel=#{tel},BeiZhu=#{beiZhu}
+		where id=#{id}
+	</update>
+	<!-- 删除 -->
+	<delete id="delete" parameterType="CGQInfo">
+		delete from cgqinfo where
+		id=#{id}
+	</delete>
+	<!-- 查询所有数据并分页 -->
+	<select id="findAll" resultMap="cgqInfo">
+		select * from cgqinfo LIMIT
+		#{offset},#{limit}
+	</select>
+	<!-- 数据总数 -->
+	<select id="getTotalNum" resultType="int">
+		SELECT count(id)
+		from cgqinfo
+	</select>
+	<!-- 按条件查询 -->
+	<select id="findCondition" resultMap="cgqInfo" parameterType="CGQInfo">
+		select *
+		from cgqinfo
+		<where>
+			<if test="xqName!='--选择小区名称--'">
+				XqName=#{xqName}
+			</if>
+			<if test="cgqId!='--选择传感器--'">
+				and CgqId=#{cgqId}
+			</if>
+			<if test="name!='' and name!=null">
+				and UserName=#{name}
+			</if>
+		</where>
+		LIMIT #{offset},#{limit}
+	</select>
+	<!-- 按条件查询总数 -->
+	<select id="getTotal" resultType="int">
+		SELECT count(id) from cgqinfo
+		<where>
+			<if test="xqName!='--选择小区名称--'">
+				XqName=#{xqName}
+			</if>
+			<if test="cgqId!='--选择传感器--'">
+				and CgqId=#{cgqId}
+			</if>
+			<if test="name!='' and name!=null">
+				and UserName=#{name}
+			</if>
+		</where>
+	</select>
+	<!-- =======================================传感器结束====================================================== -->
+	<!-- ========================================温度实时开始==================================================== -->
+	
+	
+		<resultMap type="CGQInfo" id="cgqInfO">
+		<id property="id" column="id" />
+		<result property="cgqId" column="CgqId" />
+		<result property="ad433" column="Ad433" />
+		<result property="xqName" column="XqName" />
+		<result property="buildNO" column="BuildNO" />
+		<result property="cellNO" column="CellNO" />
+		<result property="houseNO" column="houseNO" />
+		<result property="name" column="UserName" />
+		<result property="tel" column="Tel" />
+		<result property="beiZhu" column="BeiZhu" />
+		<result property="wd" column="WD" />
+		<result property="sd" column="SD" />
+		<result property="dl" column="DL" />
+		<result property="recordTime1" column="RecordTime" />
+	</resultMap>
+	
+	<!-- 列表显示 -->
+	<select id="findAllWd" resultMap="cgqInfO">
+		select id,
+		CgqId,WD,DL,RecordTime,Ad433,XqName,BuildNO,CellNO,houseNO,UserName,Tel
+		from cgqinfo
+		LIMIT #{offset},#{limit}
+	</select>
+	<!-- 数据总数 -->
+	<select id="getTotalNumWd" resultType="int">
+		SELECT count(id)
+		from cgqinfo
+	</select>
+
+	<!-- 按条件查询 -->
+	<select id="findConditionWd" resultMap="cgqInfO" parameterType="CGQInfo">
+		select
+		id,CgqId,WD,DL,RecordTime,Ad433,XqName,BuildNO,CellNO,houseNO,UserName,Tel
+		from cgqinfo
+		<where>
+			<if test="xqName!='--选择小区名称--'">
+				XqName=#{xqName}
+			</if>
+		</where>
+		LIMIT #{offset},#{limit}
+	</select>
+	<!-- 按条件查询总数 -->
+	<select id="getTotalWd" resultType="int">
+		SELECT count(id) from cgqinfo
+		<where>
+			<if test="xqName!='--选择小区名称--'">
+				XqName=#{xqName}
+			</if>
+		</where>
+	</select>
+	<!-- 按条件查询导出 -->
+	<select id="findByNameWd" resultMap="cgqInfO" parameterType="CGQInfo">
+		select id,CgqId,WD,DL,RecordTime,Ad433,XqName,BuildNO,CellNO,houseNO,UserName,Tel
+		from cgqinfo
+		<where>
+			<if test="xqName!='--选择小区名称--'">
+				XqName=#{xqName}
+			</if>
+		</where>
+	</select>
+	<!-- ========================================温度实时结束==================================================== -->
+
+<!-- ==========================================饼图开始============================================================ -->
+
+
+	<!-- 温度40以上 -->
+	<select id="findWDA" resultType="int">
+		select count(*)
+		from cgqinfo
+		where WD &gt;='40'
+		<if test="xqName!='--选择小区名称--'">
+			and XqName=#{xqName}
+		</if>
+
+	</select>
+
+	<!-- 温度30-39 -->
+	<select id="findWDB" resultType="int">
+		select count(*)
+		from cgqinfo
+		where WD &gt;='30' and WD &lt; '40'
+		<if test="xqName!='--选择小区名称--'">
+			and XqName=#{xqName}
+		</if>
+	</select>
+
+	<!-- 温度15-29 -->
+	<select id="findWDC" resultType="int">
+		select count(*)
+		from cgqinfo
+		where WD &gt;='15' and WD &lt; '30'
+		<if test="xqName!='--选择小区名称--'">
+			and XqName=#{xqName}
+		</if>
+	</select>
+
+	<!-- 温度15以下 -->
+	<select id="findWDD" resultType="int">
+		select count(*)
+		from cgqinfo
+		where WD &lt; '15'
+		<if test="xqName!='--选择小区名称--'">
+			and XqName=#{xqName}
+		</if>
+	</select>
+	<!-- =========================================饼图结束============================================================ -->
+	
+	<!-- 散点图 -->
+	<select id="chartSearchSd" resultMap="cgqInfo" parameterType="CGQInfo">
+		select id,WD,DL from cgqinfo
+		<where>
+			<if test="xqName!='--选择小区名称--'">
+				and XqName=#{xqName}
+			</if>
+		</where>
+	</select>
+<!-- 	根据id查找具体信息 -->
+	<select id="findSd"  resultMap="cgqInfo" parameterType="CGQInfo">
+
+	  select CgqId,XqName,BuildNO,CellNO,houseNO,WD from cgqinfo where id=#{id}
+		</select>
+</mapper>

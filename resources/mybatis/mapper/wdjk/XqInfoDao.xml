@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnzy.per.wdjk.dao.XqInfoDao">
+	<resultMap type="XqInfo" id="xqInfo">
+		<id property="id" column="id" />
+		<result property="xqId" column="XqId" />
+		<result property="xqName" column="XqName" />
+		<result property="xqAd" column="XqAd" />
+		<result property="wyName" column="WyName" />
+		<result property="wyTel" column="WyTelephone" />
+		<result property="beiZhu" column="BeiZhu" />
+		<result property="ip" column="IP" />
+		<result property="portNum" column="PortNum" />
+		<result property="lng" column="lng" />
+		<result property="lat" column="lat" />
+		<result property="cgq.cgqId" column="CgqId"/>
+		<result property="cgq.wd" column="WD"/>
+		<result property="qg.wxAd" column="Ad433"/>
+		<result property="qg.qgId" column="QgId"/>
+	</resultMap>
+	<select id="findwd" resultMap="xqInfo" parameterType="XqInfo">
+		select AVG(c.WD) WD, x.XqName,lng,lat from cgqinfo c,xqinfo x where c.XqName=x.XqName GROUP BY x.XqName
+<!-- select *,AVG(c.WD) WD   from cgqinfo c,xqinfo x,qginfo q where q.Ad433=c.Ad433 and c.XqName=x.XqName and x.XqName='兴苑小区' -->
+	</select>
+	
+	<!-- 按条件查询 -->
+	<select id="findConditionIP" resultMap="xqInfo" parameterType="XqInfo">
+		select *
+		from xqinfo
+		<where>
+			<if test="xqName!='--选择小区名称--'">
+			XqName like #{xqName}
+			</if>
+		</where>
+		LIMIT #{offset},#{limit}
+	</select>
+	<!-- 按条件查询总数 -->
+	<select id="getTotalIP" resultType="int">
+		SELECT count(id) from xqinfo
+		<where>
+			<if test="xqName!='--选择小区名称--'">
+			XqName like #{xqName}
+			</if>
+		</where>
+	</select>
+	<!-- 	修改 -->
+	<update id="updateIP" parameterType="XqInfo">
+		update xqinfo set
+		IP=#{ip},PortNum=#{portNum}
+		 where id=#{id}
+	</update>
+	
+	<!-- 	添加 --> 
+	<insert id="Insert" parameterType="XqInfo">
+	 insert into xqinfo(XqId,XqName,XqAd,WyName,WyTelephone,BeiZhu)
+	 values(#{xqId},#{xqName},#{xqAd},#{wyName},#{wyTel},#{beiZhu})
+	</insert>
+	<!-- 	根据ID查询 -->
+	<select id="findById" parameterType="XqInfo" resultMap="xqInfo">
+		select * from xqinfo where id=#{id}
+	</select>
+	<!-- 	修改 -->
+	<update id="update" parameterType="XqInfo">
+		update xqinfo set
+		XqId=#{xqId},XqName=#{xqName} ,XqAd=#{xqAd},WyName=#{wyName} ,WyTelephone=#{wyTel},BeiZhu=#{beiZhu}
+		 where id=#{id}
+	</update>
+<!-- 	删除 -->
+	<delete id="delete" parameterType="XqInfo">
+		delete from xqinfo where id=#{id}
+	</delete>
+	<!-- 查询所有数据并分页 -->
+	<select id="findAll" resultMap="xqInfo">
+		select * from xqinfo LIMIT
+		#{offset},#{limit}
+	</select>
+	<!-- 数据总数 -->
+	<select id="getTotalNum" resultType="int">
+		SELECT count(id)
+		from xqinfo
+	</select>
+		<!-- 按条件查询 -->
+	<select id="findCondition" resultMap="xqInfo" parameterType="XqInfo">
+		select *
+		from xqinfo
+		<where>
+			<if test="wyName!='--选择物业名称--'">
+				and WyName=#{wyName}
+			</if>
+			<if test="xqName!='--选择小区名称--'">
+				and XqName=#{xqName}
+			</if>
+			
+		</where>
+		LIMIT #{offset},#{limit}
+	</select>
+	<!-- 按条件查询总数 -->
+	<select id="getTotal" resultType="int">
+		SELECT count(id) from xqinfo
+		<where>
+			<if test="wyName!='--选择物业名称--'">
+				and WyName=#{wyName}
+			</if>
+			<if test="xqName!='--选择小区名称--'">
+				and XqName=#{xqName}
+			</if>
+		</where>
+	</select>
+	<!-- 查询物业名字 -->
+	<select id="find" resultMap="xqInfo">
+		select WyName from xqinfo group by WyName
+	</select>
+	<!-- 根据物业查找小区 -->
+	<select id="findXqId" resultMap="xqInfo" parameterType="XqInfo">
+		select
+		XqName from xqinfo where WyName=#{wyName}
+		group by XqName
+	</select>
+	<!-- 查询小区名字 -->
+	<select id="findXqName" resultMap="xqInfo">
+		select XqName from xqinfo group by	XqName
+	</select>
+	<!-- 根据小区查找传感器 -->
+	<select id="findcgqId" resultMap="xqInfo" parameterType="XqInfo">
+		select cgq.CgqId from cgqinfo cgq,xqinfo xq where xq.XqName=cgq.XqName and xq.XqName=#{xqName}
+		group by cgq.CgqId
+	</select>
+		<!-- 根据小区查找区管433 -->
+	<select id="findqg433" resultMap="xqInfo" parameterType="XqInfo">
+		select qg.Ad433 from qginfo qg,xqinfo xq where xq.XqName=qg.XqName and xq.XqName=#{xqName}
+		group by qg.Ad433
+	</select>
+			<!-- 根据小区查找区管 -->
+	<select id="findqgId" resultMap="xqInfo" parameterType="XqInfo">
+		select qg.QgId from qginfo qg,xqinfo xq where xq.XqName=qg.XqName and xq.XqName=#{xqName}
+		group by qg.QgId
+	</select>
+	
+			<!-- 根据小区查找小区Id -->
+	<select id="findxqId" resultMap="xqInfo" parameterType="XqInfo">
+		select XqId from xqinfo where XqName=#{xqName}
+	</select>
+</mapper>

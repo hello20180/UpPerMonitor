@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "http://mybatis.org/dtd/mybatis-3-config.dtd" "mybatis-3-config.dtd" >
+<configuration>
+<typeAliases>
+	<typeAlias type="com.hnzy.per.wdjk.pojo.User" alias="User"/>
+	<typeAlias type="com.hnzy.per.wdjk.pojo.QGInfo" alias="QGInfo"/>
+	<typeAlias type="com.hnzy.per.wdjk.pojo.CGQInfo" alias="CGQInfo"/>
+	<typeAlias type="com.hnzy.per.wdjk.pojo.WdHistory" alias="WdHistory"/>
+	<typeAlias type="com.hnzy.per.wdjk.pojo.XqInfo" alias="XqInfo"/>
+	<typeAlias type="com.hnzy.per.wdjk.pojo.Rz" alias="Rz"/>
+	<typeAlias type="com.hnzy.per.wdjk.pojo.QgState" alias="QgState"/>
+	<typeAlias type="com.hnzy.per.wdjk.pojo.JZQInfo" alias="JZQInfo"/>
+</typeAliases>
+</configuration>

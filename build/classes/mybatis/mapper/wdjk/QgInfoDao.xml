@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.hnzy.per.wdjk.dao.QgInfoDao">
+	<resultMap type="QgInfo" id="qgInfo">
+		<id property="id" column="id" />
+		<result property="qgId" column="QgId" />
+		<result property="xqId" column="XqId" />
+		<result property="xq.ip" column="IP" />
+		<result property="xq.portNum" column="PortNum" />
+		<result property="xqName" column="XqName" />
+		<result property="buildNO" column="BuildNO" />
+		<result property="qgAd" column="QgAd" />
+		<result property="ms" column="MS" />
+		<result property="wxAd" column="Ad433" />
+		<result property="beiZhu" column="BeiZhu" />
+		<result property="swwd" column="SWWD" />
+		<result property="recordTime" column="RecordTime" />
+	</resultMap>
+	<!-- 查询所有数据并分页 -->
+	<select id="findAll1" resultMap="qgInfo">
+		select q.id,q.QgId,x.XqId,x.IP,x.PortNum,q.SWWD,q.RecordTime,q.MS,q.XqName,q.BuildNO,q.QgAd,q.Ad433
+		from qginfo q,xqinfo x
+		where x.XqId=q.XqId
+		LIMIT #{offset},#{limit}
+	</select>
+	<!-- 按条件查询 -->
+	<select id="findCondition1" resultMap="qgInfo" parameterType="QgInfo">
+		select q.id,q.QgId,x.XqId,x.IP,x.PortNum,q.SWWD,q.RecordTime,q.MS,q.XqName,q.BuildNO,q.QgAd,q.Ad433
+		from qginfo q,xqinfo x
+		where x.XqId=q.XqId
+		<if test="xqName!='--选择小区名称--'">
+			and q.XqName=#{xqName}
+		</if>
+		<if test="qgId!='--选择区管ID--'">
+		    and q.QgId=#{qgId}
+		</if>
+			
+		LIMIT #{offset},#{limit}
+	</select>
+		<!-- 	根据ID查询 -->
+	<select id="findById1" parameterType="QgInfo" resultMap="qgInfo">
+		select * 
+		from qginfo q,xqinfo x
+		where x.XqId=q.XqId and q.id=#{ids}
+
+	</select>
+	
+	<!-- 按条件查询总数 -->
+	<select id="getTotal1" resultType="int">
+		SELECT count(q.id)
+		from qginfo q 
+		<where>
+		<if test="xqName!='--选择小区名称--'">
+			q.XqName=#{xqName}
+		</if>
+		<if test="qgId!='--选择区管ID--'">
+		    and q.QgId=#{qgId}
+		</if>
+		</where>
+	</select>
+
+	
+		<!-- 查询所有数据并分页 -->
+	<select id="findAll" resultMap="qgInfo">
+		select * from qginfo LIMIT
+		#{offset},#{limit}
+	</select>
+	<!-- 	添加 --> 
+	<insert id="Insert" parameterType="QgInfo">
+	 insert into qginfo(QgId,XqId,XqName,BuildNO,QgAd,BeiZhu,MS,Ad433)
+	 values(#{qgId},#{xqId},#{xqName},#{buildNO},#{qgAd},#{beiZhu},#{ms},#{wxAd})
+	</insert>
+	<!-- 	根据ID查询 -->
+	<select id="findById" parameterType="QgInfo" resultMap="qgInfo">
+		select * from qginfo
+	
+		  where id=#{id}
+
+	</select>
+	<!-- 	修改 -->
+	<update id="update" parameterType="QgInfo">
+		update qginfo set
+		QgId=#{qgId},XqId=#{xqId},XqName=#{xqName},BuildNO=#{buildNO},QgAd=#{qgAd},BeiZhu=#{beiZhu}
+		 where id=#{id}
+	</update>
+<!-- 	删除 -->
+	<delete id="delete" parameterType="QgInfo">
+		delete from qginfo where id=#{id}
+	</delete>
+
+	<!-- 数据总数 -->
+	<select id="getTotalNum" resultType="int">
+		SELECT count(id)
+		from qginfo
+	</select>
+		<!-- 按条件查询 -->
+	<select id="findCondition" resultMap="qgInfo" parameterType="QgInfo">
+		select *
+		from qginfo
+		<where>
+			<if test="xqName!='--选择小区名称--'">
+				XqName=#{xqName}
+			</if>
+		</where>
+		LIMIT #{offset},#{limit}
+	</select>
+	<!-- 按条件查询总数 -->
+	<select id="getTotal" resultType="int">
+		SELECT count(id) from qginfo
+		<where>
+			<if test="xqName!='--选择小区名称--'">
+				XqName=#{xqName}
+			</if>
+			
+		</where>
+	</select>
+	
+</mapper>
